@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link2, Plus, Trash2, FolderPlus, Clipboard, Pencil, Check, X, ArrowUpDown, Eye, EyeOff } from "lucide-react";
+import { Link2, Plus, Trash2, FolderPlus, Clipboard, Pencil, Check, X, ArrowUpDown, CheckSquare, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -31,6 +31,7 @@ const DEFAULT_FOLDERS = ["대학원", "업무", "KBS", "기타"];
 const DEFAULT_TAGS = ["유튜브", "페이스북", "인스타그램", "뉴스", "메모", "드라이브", "기타"];
 
 type SortOption = "newest" | "oldest" | "alphabetical";
+type CheckFilter = "all" | "checked" | "unchecked";
 
 const Index = () => {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -46,6 +47,7 @@ const Index = () => {
   const [editingFolder, setEditingFolder] = useState<string>("");
   const [editingTags, setEditingTags] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [checkFilter, setCheckFilter] = useState<CheckFilter>("all");
   const [folderToDelete, setFolderToDelete] = useState<string | null>(null);
 
   // Firestore 리스너 설정
@@ -248,6 +250,13 @@ const Index = () => {
       );
     }
 
+    // Filter by check status
+    if (checkFilter === "checked") {
+      filtered = filtered.filter(bookmark => bookmark.isChecked);
+    } else if (checkFilter === "unchecked") {
+      filtered = filtered.filter(bookmark => !bookmark.isChecked);
+    }
+
     // Sort based on selected option
     switch (sortBy) {
       case "newest":
@@ -432,40 +441,83 @@ const Index = () => {
         {/* Sort Options */}
         {bookmarks.length > 0 && (
           <section className="mb-6 animate-fade-in">
-            <div className="flex items-center justify-center gap-2">
-              <ArrowUpDown className="w-4 h-4 text-blue-300" />
-              <span className="text-sm text-blue-200/80">정렬:</span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setSortBy("newest")}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
-                    sortBy === "newest"
-                      ? "bg-blue-500/40 text-blue-50 border border-blue-400/50"
-                      : "text-blue-300/70 hover:text-blue-200 hover:bg-blue-500/10"
-                  }`}
-                >
-                  최신순
-                </button>
-                <button
-                  onClick={() => setSortBy("oldest")}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
-                    sortBy === "oldest"
-                      ? "bg-blue-500/40 text-blue-50 border border-blue-400/50"
-                      : "text-blue-300/70 hover:text-blue-200 hover:bg-blue-500/10"
-                  }`}
-                >
-                  오래된순
-                </button>
-                <button
-                  onClick={() => setSortBy("alphabetical")}
-                  className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
-                    sortBy === "alphabetical"
-                      ? "bg-blue-500/40 text-blue-50 border border-blue-400/50"
-                      : "text-blue-300/70 hover:text-blue-200 hover:bg-blue-500/10"
-                  }`}
-                >
-                  가나다순
-                </button>
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              {/* Sort by date/alphabet */}
+              <div className="flex items-center gap-2">
+                <ArrowUpDown className="w-4 h-4 text-blue-300" />
+                <span className="text-sm text-blue-200/80">정렬:</span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setSortBy("newest")}
+                    className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                      sortBy === "newest"
+                        ? "bg-blue-500/40 text-blue-50 border border-blue-400/50"
+                        : "text-blue-300/70 hover:text-blue-200 hover:bg-blue-500/10"
+                    }`}
+                  >
+                    최신순
+                  </button>
+                  <button
+                    onClick={() => setSortBy("oldest")}
+                    className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                      sortBy === "oldest"
+                        ? "bg-blue-500/40 text-blue-50 border border-blue-400/50"
+                        : "text-blue-300/70 hover:text-blue-200 hover:bg-blue-500/10"
+                    }`}
+                  >
+                    오래된순
+                  </button>
+                  <button
+                    onClick={() => setSortBy("alphabetical")}
+                    className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                      sortBy === "alphabetical"
+                        ? "bg-blue-500/40 text-blue-50 border border-blue-400/50"
+                        : "text-blue-300/70 hover:text-blue-200 hover:bg-blue-500/10"
+                    }`}
+                  >
+                    가나다순
+                  </button>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="w-px h-6 bg-blue-400/30"></div>
+
+              {/* Filter by check status */}
+              <div className="flex items-center gap-2">
+                <CheckSquare className="w-4 h-4 text-blue-300" />
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setCheckFilter("unchecked")}
+                    className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                      checkFilter === "unchecked"
+                        ? "bg-blue-500/40 text-blue-50 border border-blue-400/50"
+                        : "text-blue-300/70 hover:text-blue-200 hover:bg-blue-500/10"
+                    }`}
+                  >
+                    확인전
+                  </button>
+                  <button
+                    onClick={() => setCheckFilter("checked")}
+                    className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                      checkFilter === "checked"
+                        ? "bg-blue-500/40 text-blue-50 border border-blue-400/50"
+                        : "text-blue-300/70 hover:text-blue-200 hover:bg-blue-500/10"
+                    }`}
+                  >
+                    확인
+                  </button>
+                  <button
+                    onClick={() => setCheckFilter("all")}
+                    className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                      checkFilter === "all"
+                        ? "bg-blue-500/40 text-blue-50 border border-blue-400/50"
+                        : "text-blue-300/70 hover:text-blue-200 hover:bg-blue-500/10"
+                    }`}
+                  >
+                    전체
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -607,11 +659,11 @@ const Index = () => {
                               className={`h-8 w-8 transition-all ${
                                 bookmark.isChecked
                                   ? "text-green-400 hover:text-green-300 bg-green-500/10 hover:bg-green-500/20"
-                                  : "text-yellow-400 hover:text-yellow-300 bg-yellow-500/10 hover:bg-yellow-500/20"
+                                  : "text-blue-300 hover:text-blue-200 bg-blue-500/10 hover:bg-blue-500/20"
                               }`}
                               title={bookmark.isChecked ? "확인함" : "미확인"}
                             >
-                              {bookmark.isChecked ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                              {bookmark.isChecked ? <CheckSquare className="w-4 h-4" /> : <Square className="w-4 h-4" />}
                             </Button>
                             {/* Edit/Delete buttons - show on hover */}
                             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">

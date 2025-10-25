@@ -56,47 +56,54 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 220 20% 10%;
-    --foreground: 220 10% 95%;
+    --background: 220 40% 10%;
+    --foreground: 210 30% 95%;
 
-    --card: 220 18% 14%;
-    --card-foreground: 220 10% 95%;
+    --card: 220 35% 15% / 0.5;
+    --card-foreground: 210 30% 95%;
 
-    --popover: 220 18% 14%;
-    --popover-foreground: 220 10% 95%;
+    --popover: 220 35% 15% / 0.8;
+    --popover-foreground: 210 30% 95%;
 
-    --primary: 250 70% 65%;
+    --primary: 210 80% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 18% 18%;
-    --secondary-foreground: 220 10% 95%;
+    --secondary: 220 30% 18%;
+    --secondary-foreground: 210 25% 90%;
 
-    --muted: 220 18% 18%;
-    --muted-foreground: 220 10% 60%;
+    --muted: 220 30% 20%;
+    --muted-foreground: 210 20% 65%;
 
-    --accent: 270 60% 70%;
+    --accent: 195 75% 60%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 70% 55%;
+    --destructive: 0 70% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 18% 20%;
-    --input: 220 18% 20%;
-    --ring: 250 70% 65%;
+    --border: 220 30% 25% / 0.3;
+    --input: 220 30% 20% / 0.3;
+    --ring: 210 80% 60%;
 
-    --gradient-primary: linear-gradient(135deg, hsl(250, 70%, 65%) 0%, hsl(270, 60%, 70%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(220, 20%, 10%) 0%, hsl(240, 20%, 12%) 100%);
-    --shadow-card: 0 4px 20px -4px hsl(250 70% 30% / 0.3);
-    --shadow-hover: 0 8px 30px -6px hsl(250 70% 30% / 0.5);
+    /* Blue tone gradients */
+    --gradient-blue: linear-gradient(135deg, hsl(210, 80%, 60%) 0%, hsl(195, 75%, 60%) 100%);
+    --gradient-blue-dark: radial-gradient(ellipse at top, hsl(220, 50%, 15%) 0%, hsl(220, 40%, 10%) 50%, hsl(220, 45%, 8%) 100%);
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    /* Blue glassmorphism shadows */
+    --shadow-blue: 0 8px 32px 0 rgba(59, 130, 246, 0.25);
+    --shadow-blue-hover: 0 12px 48px 0 rgba(59, 130, 246, 0.35);
+
+    /* Blue glass backgrounds */
+    --glass-blue-border: rgba(96, 165, 250, 0.2);
+    --glass-blue-bg: rgba(59, 130, 246, 0.08);
+
+    --sidebar-background: 220 40% 12%;
+    --sidebar-foreground: 210 30% 95%;
+    --sidebar-primary: 210 80% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 220 35% 18%;
+    --sidebar-accent-foreground: 210 30% 95%;
+    --sidebar-border: 220 30% 20%;
+    --sidebar-ring: 210 80% 60%;
   }
 }
 
@@ -106,6 +113,50 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground dark;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Blue tone glassmorphism styles */
+  .glass-blue {
+    background: var(--glass-blue-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-blue-border);
+  }
+
+  .bg-blue-dark {
+    background: var(--gradient-blue-dark);
+  }
+
+  .bg-blue-glass {
+    background: rgba(59, 130, 246, 0.15);
+  }
+
+  .bg-gradient-blue {
+    background: var(--gradient-blue);
+  }
+
+  .shadow-blue {
+    box-shadow: var(--shadow-blue);
+  }
+
+  .shadow-blue-hover {
+    box-shadow: var(--shadow-blue-hover);
   }
 }
